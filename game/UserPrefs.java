@@ -18,7 +18,6 @@ public class UserPrefs implements Serializable{
 		fullscreen = false;
 		screenWidth = 900;
 		screenHeight = 700;
-		System.out.println("Hi");
 	}
 	
 	public boolean getFullscreen() {

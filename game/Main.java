@@ -26,8 +26,10 @@ import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -39,7 +41,7 @@ import javax.swing.JTextField;
 import framework.*;
 
 
-public class Main extends Canvas implements Runnable
+public class Main extends Game
 {
 	private static final long serialVersionUID = 1L;
 	private static int WIDTH = (int)(768 * 1.2);
@@ -63,72 +65,13 @@ public class Main extends Canvas implements Runnable
 	
 	private Point mouseClick;
 	
-	private VolatileImage canvas;
-	private Graphics g;
-	/** Used only to draw the canvas **/
-	private Graphics2D g2d;
-	/** Used to draw to the canvas **/
-	private Graphics2D canvasGraphics;
+
 	
 	private GraphicsConfiguration gc;
 	
-	
-	private void init()
-	{
-		keys = new KeyState();
-		
-		manager = new LevelManager();
-		manager.setScale(scale);
-		
-		menu = new Menu(manager, GameLevels.MENU);
-		levelA = new TestLevel(manager, GameLevels.TEST);
-		
-		manager.setLevel(GameLevels.TEST.ordinal());
-		
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice gd = ge.getScreenDevices()[0];
-		gc = gd.getConfigurations()[0];
-		canvas = gc.createCompatibleVolatileImage(preferences.getScreenWidth(), preferences.getScreenHeight());
-	}
-	private void update()
-	{
-		manager.update(keys, mouseDown);
-		manager.updateUI(mouseClick);
-		mouseClick = null;
-	}
-	private void render()
-	{
-		BufferStrategy strat = this.getBufferStrategy();
-		if (strat == null)
-		{
-			this.createBufferStrategy(3);
-			return;
-		}
-		
-		g = strat.getDrawGraphics();
-		g2d = (Graphics2D)g;
-//		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
-		canvasGraphics = canvas.createGraphics();
-		canvasGraphics.setColor(Color.DARK_GRAY);
-		canvasGraphics.fillRect(0, 0, preferences.getScreenWidth(), preferences.getScreenHeight());
-
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 0, preferences.getScreenWidth(), preferences.getScreenHeight());
-		
-		manager.render(canvasGraphics, debug);
-		manager.renderUI(canvasGraphics, debug);
-
-		g2d.drawImage(canvas, 0, 0, null);
-		
-		g2d.dispose();
-		g.dispose();
-		strat.show();
-	}
-	
-	public Main()
-	{
+	@Override
+	public void init()
+	{	
 		File prefFile = new File("preferences.txt");
 		if (prefFile.exists())
 		{
@@ -148,11 +91,13 @@ public class Main extends Canvas implements Runnable
 			preferences = new UserPrefs();
 		}
 		
-		SettingsScreen.runSettingsScreen(preferences);
 		scale = Double.valueOf(preferences.getScreenWidth()) / WIDTH; // Need to cast to double here, or it will round
 		
-		CustomWindow win = new CustomWindow("title", this, preferences);
-		this.addKeyListener(new KeyListener() {
+		System.out.println(preferences.getScreenWidth());
+		System.out.println(getFrame().getWidth());
+		getFrame().setSize(new Dimension(preferences.getScreenWidth(), preferences.getScreenHeight()));
+		System.out.println(getFrame().getWidth());
+		getFrame().addKeyListener(new KeyListener() {
 	        @Override
 	        public void keyTyped(KeyEvent e) {
 	        }
@@ -207,60 +152,65 @@ public class Main extends Canvas implements Runnable
 	        	}
 	        }
 	    });
-		this.addMouseListener(new MouseAdapter() {
+		getFrame().addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent e) {
 		    	mouseClick = e.getPoint();
 		    }
 		});
+		
+		keys = new KeyState();
+		
+		manager = new LevelManager();
+		manager.setScale(scale);
+		
+		menu = new Menu(manager, GameLevels.MENU);
+		levelA = new TestLevel(manager, GameLevels.TEST);
+		
+		manager.setLevel(GameLevels.TEST.ordinal());
 	}
-	public synchronized void start()
+	@Override
+	public void update()
 	{
-		thread = new Thread(this);
-		thread.start();
-		running = true;
+		manager.update(keys, mouseDown);
+		manager.updateUI(mouseClick);
+		mouseClick = null;
 	}
-	public synchronized void stop()
+	@Override
+	public void render(Graphics2D g2d)
 	{
-		try {
-			thread.join();
-			running = false;
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+		super.render(g2d);
+//		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		
+		manager.render(g2d, debug);
+		manager.renderUI(g2d, debug);
+	}
+	
+	public Main()
+	{
+		super();
 	}
 
-	public void run() {
-		long lastTime = System.nanoTime();
-		double amountOfTicks = 60.0;
-		double ns = 1000000000/amountOfTicks;
-		double delta = 0;
-		long timer = System.currentTimeMillis();
-		int frames = 0;
-		init();
-		while (running)
+	@Override
+	public void onClose()
+	{
+		preferences.setScreenWidth(getFrame().getWidth());
+		preferences.setScreenHeight(getFrame().getHeight());
+		try
 		{
-			long now = System.nanoTime();
-			delta += (now - lastTime) / ns;
-			lastTime = now;
-			while (delta >= 1)
-			{
-				update();
-				delta--;
-			}
-			if (running)
-			{
-				render();
-			}
-			frames++;
-			
-			if (System.currentTimeMillis() - timer > 1000)
-			{
-				timer += 1000;
-				System.out.println("FPS: " + frames);
-				frames = 0;
-			}
+		    FileOutputStream fileOutputStream
+		      = new FileOutputStream("preferences.txt");
+		    ObjectOutputStream objectOutputStream 
+		      = new ObjectOutputStream(fileOutputStream);
+		    objectOutputStream.writeObject(preferences);
+		    objectOutputStream.flush();
+		    objectOutputStream.close();
 		}
-		stop();
+		catch (IOException e1)
+		{
+			e1.printStackTrace();
+		}
+		super.onClose();
 	}
 	
 	public static void main(String args[])

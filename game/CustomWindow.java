@@ -39,8 +39,9 @@ public class CustomWindow extends JPanel{
 	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 	    int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
 	    frame.setLocation(x, frame.getY());
-		frame.add(game);
+//		frame.add(game);
         frame.setVisible(true);
+        System.out.println("why");
 		game.start();
 	}
 	

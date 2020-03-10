@@ -118,7 +118,6 @@ public class SettingsScreen {
 			    Thread.currentThread().interrupt();
 			}
 		}
-		System.out.println(frame.getExtendedState());
 		preferences.setFullscreen(isFullscreen.isSelected());
 		preferences.setMaximized(frame.getExtendedState() == JFrame.MAXIMIZED_BOTH); 
 		preferences.setScreenWidth(frame.getWidth());
