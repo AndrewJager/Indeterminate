@@ -24,6 +24,7 @@ import framework.Sprite;
 import framework.SpriteSheet;
 import framework.Wall;
 import framework.WallTypes;
+import framework.PhysicsType;
 import framework.imageFilters.ImageFilter;
 import framework.imageFilters.LightenFrom;
 import framework.imageFilters.ShadeDir;
@@ -210,9 +211,15 @@ public class Player extends GameObject{
 				l_upper_leg, r_knee, l_knee, r_lower_leg, l_lower_leg, r_foot, l_foot);
 		return BaseSprite;
 	}
+	@Override
 	public void rescale()
 	{
 		
+	}
+	@Override
+	public PhysicsType getPhysicsType()
+	{
+		return PhysicsType.NONE;
 	}
 	public double getX()
 	{ return x; }
@@ -285,62 +292,62 @@ public class Player extends GameObject{
 		onGround = false;
 		onRamp = false;
 		canJump = false;
-		for (int i = 0; i < level.getWalls().size(); i++)
-		{
-			Wall wall = level.getWalls().get(i);
-			if (floorCheck.intersectsLine(wall.getLine()))
-			{
-				if (wall.getType() == WallTypes.FLOOR)
-				{
-					onGround = true;
-					canJump = true;
-				}
-				else if (wall.getType() == WallTypes.RAMP)
-				{
-					canJump = true;
-				}
-			}
-			if (rCheck.intersectsLine(wall.getLine()))
-			{
-				if (wall.getType() == WallTypes.RAMP)
-				{
-					onRamp = true;
-					if (xVel > 0)
-					{
-						xVel = CLIMBSPEED;
-						yVel = -CLIMBSPEED;
-						
-					}
-				}
-				else if (wall.getType() == WallTypes.WALL)
-				{
-					if (xVel > 0)
-					{
-						xVel = 0;
-					}
-				}
-			}
-			if (lCheck.intersectsLine(wall.getLine()))
-			{
-				if (wall.getType() == WallTypes.RAMP)
-				{
-					onRamp = true;
-					if (xVel < 0)
-					{
-						xVel = -CLIMBSPEED;
-						yVel = -CLIMBSPEED;
-						
-					}
-				}
-				else if (wall.getType() == WallTypes.WALL)
-				{
-					if (xVel < 0)
-					{
-						xVel = 0;
-					}
-				}
-			}
-		}
+//		for (int i = 0; i < level.getWalls().size(); i++)
+//		{
+//			Wall wall = level.getWalls().get(i);
+//			if (floorCheck.intersectsLine(wall.getLine()))
+//			{
+//				if (wall.getType() == WallTypes.FLOOR)
+//				{
+//					onGround = true;
+//					canJump = true;
+//				}
+//				else if (wall.getType() == WallTypes.RAMP)
+//				{
+//					canJump = true;
+//				}
+//			}
+//			if (rCheck.intersectsLine(wall.getLine()))
+//			{
+//				if (wall.getType() == WallTypes.RAMP)
+//				{
+//					onRamp = true;
+//					if (xVel > 0)
+//					{
+//						xVel = CLIMBSPEED;
+//						yVel = -CLIMBSPEED;
+//						
+//					}
+//				}
+//				else if (wall.getType() == WallTypes.WALL)
+//				{
+//					if (xVel > 0)
+//					{
+//						xVel = 0;
+//					}
+//				}
+//			}
+//			if (lCheck.intersectsLine(wall.getLine()))
+//			{
+//				if (wall.getType() == WallTypes.RAMP)
+//				{
+//					onRamp = true;
+//					if (xVel < 0)
+//					{
+//						xVel = -CLIMBSPEED;
+//						yVel = -CLIMBSPEED;
+//						
+//					}
+//				}
+//				else if (wall.getType() == WallTypes.WALL)
+//				{
+//					if (xVel < 0)
+//					{
+//						xVel = 0;
+//					}
+//				}
+//			}
+//		}
 		if (onGround && !onRamp)
 		{
 			yVel = 0;

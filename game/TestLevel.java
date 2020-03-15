@@ -34,30 +34,30 @@ public class TestLevel extends Level{
 				500, 230, 500, 280, this, 30, new Color(240, 232, 14, 25));
 		this.addObject(ray);
 		
-		Wall floor = new Wall(this, 10, 400, 400, 400, WallTypes.FLOOR);
-		floor.setBackground(10, Color.DARK_GRAY, false);
+		Wall floor = new Wall(this, 10, 400, 400, 400, 10, WallTypes.FLOOR);
+		floor.setBackground(Color.DARK_GRAY, false);
 		floor.getBackground().addFilter(new BasicVariance(25));
 		floor.getBackground().addFilter(new LightenFrom(ShadeDir.TOP, 3));
 		this.addObject(floor);
 		
-		Wall rRamp = new Wall(this, 400, 400, 500, 300, WallTypes.RAMP);
-		rRamp.setBackground(20, Color.BLUE, false);
+		Wall rRamp = new Wall(this, 400, 400, 500, 300, 20, WallTypes.RAMP);
+		rRamp.setBackground(Color.BLUE, false);
 		this.addObject(rRamp);
 		
-		Wall lRamp = new Wall(this, 10, 350, 60, 400, WallTypes.RAMP);
-		lRamp.setBackground(10, Color.BLUE, false);
+		Wall lRamp = new Wall(this, 10, 350, 60, 400, 10, WallTypes.RAMP);
+		lRamp.setBackground(Color.BLUE, false);
 //		lRamp.getBackground().addFilter(new BasicVariance(20));
 //		lRamp.getBackground().addFilter(new LightenFrom(ShadeDir.LEFT, 1));
 		lRamp.getBackground().addFilter(new LightFrom(145, 0, 150, 0, 1, Color.WHITE));
 		this.addObject(lRamp);
 		
-		Wall rWall = new Wall(this, 500, 100, 500, 300, WallTypes.WALL);
-		rWall.setBackground(15, Color.DARK_GRAY, false);
+		Wall rWall = new Wall(this, 500, 100, 500, 300, 15, WallTypes.WALL);
+		rWall.setBackground(Color.DARK_GRAY, false);
 		rWall.getBackground().addFilter(new BasicVariance(25));
 		rWall.getBackground().addFilter(new LightenFrom(ShadeDir.TOP, 0.4));
 		this.addObject(rWall);
-		Wall lWall = new Wall(this, 10, 100, 10, 350, WallTypes.WALL);
-		lWall.setBackground(15, Color.BLUE, true);
+		Wall lWall = new Wall(this, 10, 100, 10, 350, 15, WallTypes.WALL);
+		lWall.setBackground(Color.BLUE, true);
 		this.addObject(lWall);
 		
 		

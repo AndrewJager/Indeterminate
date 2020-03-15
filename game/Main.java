@@ -189,14 +189,14 @@ public class Main extends Game
 	}
 	
 	@Override
-	public void onResize(JFrame frame)
+	public void onResize(DrawPanel draw)
 	{
-		scale = Double.valueOf(frame.getWidth()) / WIDTH; 
+		scale = Double.valueOf(draw.getCanvas().getWidth()) / WIDTH; 
 		if (manager != null)
 		{
 			manager.setScale(scale);
 		}
-		super.onResize(frame);
+		super.onResize(draw);
 	}
 	
 	public static void main(String args[])
