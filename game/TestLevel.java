@@ -38,27 +38,27 @@ public class TestLevel extends Level{
 		floor.setBackground(10, Color.DARK_GRAY, false);
 		floor.getBackground().addFilter(new BasicVariance(25));
 		floor.getBackground().addFilter(new LightenFrom(ShadeDir.TOP, 3));
-		this.addWall(floor);
+		this.addObject(floor);
 		
 		Wall rRamp = new Wall(this, 400, 400, 500, 300, WallTypes.RAMP);
 		rRamp.setBackground(20, Color.BLUE, false);
-		this.addWall(rRamp);
+		this.addObject(rRamp);
 		
 		Wall lRamp = new Wall(this, 10, 350, 60, 400, WallTypes.RAMP);
 		lRamp.setBackground(10, Color.BLUE, false);
 //		lRamp.getBackground().addFilter(new BasicVariance(20));
 //		lRamp.getBackground().addFilter(new LightenFrom(ShadeDir.LEFT, 1));
 		lRamp.getBackground().addFilter(new LightFrom(145, 0, 150, 0, 1, Color.WHITE));
-		this.addWall(lRamp);
+		this.addObject(lRamp);
 		
 		Wall rWall = new Wall(this, 500, 100, 500, 300, WallTypes.WALL);
 		rWall.setBackground(15, Color.DARK_GRAY, false);
 		rWall.getBackground().addFilter(new BasicVariance(25));
 		rWall.getBackground().addFilter(new LightenFrom(ShadeDir.TOP, 0.4));
-		this.addWall(rWall);
+		this.addObject(rWall);
 		Wall lWall = new Wall(this, 10, 100, 10, 350, WallTypes.WALL);
 		lWall.setBackground(15, Color.BLUE, true);
-		this.addWall(lWall);
+		this.addObject(lWall);
 		
 		
 //		Shape testIcon = ShapeFactory.solIconBar();
@@ -90,4 +90,6 @@ public class TestLevel extends Level{
 		
 		super.update(keys);
 	}
+	
+
 }

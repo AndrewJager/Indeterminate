@@ -1,42 +1,22 @@
 package game;
-import java.awt.Canvas;
+
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferStrategy;
-import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import framework.*;
 
@@ -51,11 +31,7 @@ public class Main extends Game
 	private UserPrefs preferences; 
 	
 	private boolean debug = false;
-	private Thread thread;
-	private boolean running = false;
 	private boolean mouseDown = false;
-	
-	private boolean initReady = false;
 	
 	private LevelManager manager;
 	private KeyState keys;
@@ -93,11 +69,8 @@ public class Main extends Game
 		
 		scale = Double.valueOf(preferences.getScreenWidth()) / WIDTH; // Need to cast to double here, or it will round
 		
-		System.out.println(preferences.getScreenWidth());
-		System.out.println(getFrame().getWidth());
 		getFrame().setSize(new Dimension(preferences.getScreenWidth(), preferences.getScreenHeight()));
-		System.out.println(getFrame().getWidth());
-		getFrame().addKeyListener(new KeyListener() {
+		getCanvas().addKeyListener(new KeyListener() {
 	        @Override
 	        public void keyTyped(KeyEvent e) {
 	        }
@@ -107,6 +80,7 @@ public class Main extends Game
 	        	int k = e.getKeyCode();
 	        	if (k == manager.getKeyMapping().getKey("Right"))
 	        	{
+	        		System.out.println("Hello");
 	        		keys.right_key = true;
 	        	}
 	        	else if(k == manager.getKeyMapping().getKey("Left"))
@@ -152,8 +126,9 @@ public class Main extends Game
 	        	}
 	        }
 	    });
-		getFrame().addMouseListener(new MouseAdapter() {
+		getCanvas().addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent e) {
+		    	System.out.println("kj");
 		    	mouseClick = e.getPoint();
 		    }
 		});
@@ -169,7 +144,7 @@ public class Main extends Game
 		manager.setLevel(GameLevels.TEST.ordinal());
 	}
 	@Override
-	public void update()
+	public void update(double dt)
 	{
 		manager.update(keys, mouseDown);
 		manager.updateUI(mouseClick);
@@ -188,7 +163,7 @@ public class Main extends Game
 	
 	public Main()
 	{
-		super();
+		super(false);
 	}
 
 	@Override
@@ -211,6 +186,17 @@ public class Main extends Game
 			e1.printStackTrace();
 		}
 		super.onClose();
+	}
+	
+	@Override
+	public void onResize(JFrame frame)
+	{
+		scale = Double.valueOf(frame.getWidth()) / WIDTH; 
+		if (manager != null)
+		{
+			manager.setScale(scale);
+		}
+		super.onResize(frame);
 	}
 	
 	public static void main(String args[])

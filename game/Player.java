@@ -210,7 +210,10 @@ public class Player extends GameObject{
 				l_upper_leg, r_knee, l_knee, r_lower_leg, l_lower_leg, r_foot, l_foot);
 		return BaseSprite;
 	}
-	
+	public void rescale()
+	{
+		
+	}
 	public double getX()
 	{ return x; }
 	public double getY()
