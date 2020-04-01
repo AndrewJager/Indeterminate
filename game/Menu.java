@@ -24,7 +24,7 @@ public class Menu extends Level{
 	}
 
 	@Override
-	public void update(KeyState keys)
+	public void update(double dt, KeyState keys)
 	{
 		if (keys.enter_key)
 		{
@@ -35,6 +35,6 @@ public class Menu extends Level{
 			this.getManager().setLevel(GameLevels.TEST.ordinal());
 		}
 		
-		super.update(keys);
+		super.update(dt, keys);
 	}
 }

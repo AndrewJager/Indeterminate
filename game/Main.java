@@ -1,9 +1,7 @@
 package game;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
@@ -16,24 +14,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import javax.swing.JFrame;
-
 import framework.*;
 
 
 public class Main extends Game
 {
-	private static final long serialVersionUID = 1L;
 	private static int WIDTH = (int)(768 * 1.2);
 	private static int HEIGHT = (int)(432 * 1.2);
-	private double scale;
 	
 	private UserPrefs preferences; 
 	
 	private boolean debug = false;
 	private boolean mouseDown = false;
 	
-	private LevelManager manager;
 	private KeyState keys;
 	
 	private TestLevel levelA;
@@ -41,9 +34,6 @@ public class Main extends Game
 	
 	private Point mouseClick;
 	
-
-	
-	private GraphicsConfiguration gc;
 	
 	@Override
 	public void init()
@@ -67,8 +57,6 @@ public class Main extends Game
 			preferences = new UserPrefs();
 		}
 		
-		scale = Double.valueOf(preferences.getScreenWidth()) / WIDTH; // Need to cast to double here, or it will round
-		
 		getFrame().setSize(new Dimension(preferences.getScreenWidth(), preferences.getScreenHeight()));
 		getCanvas().addKeyListener(new KeyListener() {
 	        @Override
@@ -78,24 +66,23 @@ public class Main extends Game
 	        @Override
 	        public void keyPressed(KeyEvent e) {
 	        	int k = e.getKeyCode();
-	        	if (k == manager.getKeyMapping().getKey("Right"))
+	        	if (k == getManager().getKeyMapping().getKey("Right"))
 	        	{
-	        		System.out.println("Hello");
 	        		keys.right_key = true;
 	        	}
-	        	else if(k == manager.getKeyMapping().getKey("Left"))
+	        	else if(k == getManager().getKeyMapping().getKey("Left"))
 	        	{
 	        		keys.left_key = true;
 	        	}
-	        	else if(k == manager.getKeyMapping().getKey("Enter"))
+	        	else if(k == getManager().getKeyMapping().getKey("Enter"))
 	        	{
 	        		keys.left_key = true;
 	        	}
-	        	else if(k == manager.getKeyMapping().getKey("Esc"))
+	        	else if(k == getManager().getKeyMapping().getKey("Esc"))
 	        	{
 	        		keys.esc_key = true;
 	        	}
-	        	else if(k == manager.getKeyMapping().getKey("Jump"))
+	        	else if(k == getManager().getKeyMapping().getKey("Jump"))
 	        	{
 	        		keys.jump_key = true;
 	        	}
@@ -104,23 +91,23 @@ public class Main extends Game
 	        @Override
 	        public void keyReleased(KeyEvent e) {
 	        	int k = e.getKeyCode();
-	        	if (k == manager.getKeyMapping().getKey("Right"))
+	        	if (k == getManager().getKeyMapping().getKey("Right"))
 	        	{
 	        		keys.right_key = false;
 	        	}
-	        	else if(k == manager.getKeyMapping().getKey("Left"))
+	        	else if(k == getManager().getKeyMapping().getKey("Left"))
 	        	{
 	        		keys.left_key = false;
 	        	}
-	        	else if(k == manager.getKeyMapping().getKey("Enter"))
+	        	else if(k == getManager().getKeyMapping().getKey("Enter"))
 	        	{
 	        		keys.left_key = false;
 	        	}
-	        	else if(k == manager.getKeyMapping().getKey("Esc"))
+	        	else if(k == getManager().getKeyMapping().getKey("Esc"))
 	        	{
 	        		keys.esc_key = false;
 	        	}
-	        	else if(k == manager.getKeyMapping().getKey("Jump"))
+	        	else if(k == getManager().getKeyMapping().getKey("Jump"))
 	        	{
 	        		keys.jump_key = false;
 	        	}
@@ -128,26 +115,23 @@ public class Main extends Game
 	    });
 		getCanvas().addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent e) {
-		    	System.out.println("kj");
 		    	mouseClick = e.getPoint();
 		    }
 		});
 		
 		keys = new KeyState();
 		
-		manager = new LevelManager();
-		manager.setScale(scale);
 		
-		menu = new Menu(manager, GameLevels.MENU);
-		levelA = new TestLevel(manager, GameLevels.TEST);
+		menu = new Menu(getManager(), GameLevels.MENU);
+		levelA = new TestLevel(getManager(), GameLevels.TEST);
 		
-		manager.setLevel(GameLevels.TEST.ordinal());
+		getManager().setLevel(GameLevels.TEST.ordinal());
 	}
 	@Override
 	public void update(double dt)
 	{
-		manager.update(keys, mouseDown);
-		manager.updateUI(mouseClick);
+		getManager().update(dt, keys, mouseDown);
+		getManager().updateUI(mouseClick);
 		mouseClick = null;
 	}
 	@Override
@@ -157,13 +141,13 @@ public class Main extends Game
 //		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		
-		manager.render(g2d, debug);
-		manager.renderUI(g2d, debug);
+		getManager().render(g2d, debug);
+		getManager().renderUI(g2d, debug);
 	}
 	
 	public Main()
 	{
-		super(false);
+		super(false, WIDTH, HEIGHT);
 	}
 
 	@Override
@@ -191,11 +175,6 @@ public class Main extends Game
 	@Override
 	public void onResize(DrawPanel draw)
 	{
-		scale = Double.valueOf(draw.getCanvas().getWidth()) / WIDTH; 
-		if (manager != null)
-		{
-			manager.setScale(scale);
-		}
 		super.onResize(draw);
 	}
 	

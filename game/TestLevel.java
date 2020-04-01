@@ -61,34 +61,34 @@ public class TestLevel extends Level{
 		this.addObject(lWall);
 		
 		
-//		Shape testIcon = ShapeFactory.solIconBar();
-//		testIcon = ShapeUtils.scale(testIcon, 3.3);
-//		Image icon = new Image(testIcon, Color.GREEN, this);
-//		testIcon = ShapeFactory.solIconBar();
-//		testIcon = ShapeUtils.scale(testIcon, 3.3);
-//		testIcon = ShapeUtils.flipX(testIcon);
-//		icon.addShape(testIcon, Color.RED, 60, 0);
-//		icon.addFilter(new DarkenFrom(ShadeDir.BOTTOM, 4));
+		Shape testIcon = ShapeFactory.solIconBar();
+		testIcon = ShapeUtils.scale(testIcon, 3.3);
+		Image icon = new Image(testIcon, Color.GREEN, this);
+		testIcon = ShapeFactory.solIconBar();
+		testIcon = ShapeUtils.scale(testIcon, 3.3);
+		testIcon = ShapeUtils.flipX(testIcon);
+		icon.addShape(testIcon, Color.RED, 60, 0);
+		icon.addFilter(new DarkenFrom(ShadeDir.BOTTOM, 4));
 		
-		Shape testIcon = ShapeFactory.squareCutCornors(4, 1);
-		testIcon = ShapeUtils.scale(testIcon, 6);
-		Image icon = new Image(testIcon, Color.RED, this);
-		icon.addFilter(new DarkenFrom(ShadeDir.TOP, 2));
-		icon.addFilter(new LightenFrom(ShadeDir.BOTTOM, 2));
+//		Shape testIcon = ShapeFactory.squareCutCornors(4, 1);
+//		testIcon = ShapeUtils.scale(testIcon, 6);
+//		Image icon = new Image(testIcon, Color.RED, this);
+//		icon.addFilter(new DarkenFrom(ShadeDir.TOP, 2));
+//		icon.addFilter(new LightenFrom(ShadeDir.BOTTOM, 2));
 		TextBox text = new TextBox("Hello World! I would like this to be two lines, so that it will fit in the area allowed,"
-				+ " instead of overflowing, which is a bad thing.", icon, this);
+				+ " instead of overflowing, which is a bad thing.", 200, 410, 500, 60, icon, this);
 		
 		this.addUI(text);
 	}
 	@Override
-	public void update(KeyState keys)
+	public void update(double dt, KeyState keys)
 	{
 		if (keys.esc_key)
 		{
 			this.getManager().setLevel(GameLevels.MENU.ordinal());
 		}
 		
-		super.update(keys);
+		super.update(dt, keys);
 	}
 	
 

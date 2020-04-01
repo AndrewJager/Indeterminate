@@ -114,13 +114,13 @@ public class Player extends GameObject{
 		
 		four = two.getFlipped(this.x);
 		five = three.getFlipped(this.x);
-		sheet = new SpriteSheet(two, three);
+		sheet = new SpriteSheet("test", two, three);
 		
 		animations.put(PlayerStates.WALK_R, sheet);
 		
-		sheet = new SpriteSheet(four, five);
+		sheet = new SpriteSheet("Test", four, five);
 		animations.put(PlayerStates.WALK_L, sheet);
-		sheet = new SpriteSheet(one);
+		sheet = new SpriteSheet("Test", one);
 		animations.put(PlayerStates.IDLE_R, sheet);
 		animations.put(PlayerStates.IDLE_L, sheet);
 		state = PlayerStates.WALK_R;
@@ -226,7 +226,7 @@ public class Player extends GameObject{
 	public double getY()
 	{ return y; }
 	@Override
-	public void update(KeyState keys) {
+	public void update(double dt, KeyState keys) {
 		int xVel = 0;
 		int yVel = 0;
 		animations.get(state).update(keys);
@@ -292,62 +292,67 @@ public class Player extends GameObject{
 		onGround = false;
 		onRamp = false;
 		canJump = false;
-//		for (int i = 0; i < level.getWalls().size(); i++)
-//		{
-//			Wall wall = level.getWalls().get(i);
-//			if (floorCheck.intersectsLine(wall.getLine()))
-//			{
-//				if (wall.getType() == WallTypes.FLOOR)
-//				{
-//					onGround = true;
-//					canJump = true;
-//				}
-//				else if (wall.getType() == WallTypes.RAMP)
-//				{
-//					canJump = true;
-//				}
-//			}
-//			if (rCheck.intersectsLine(wall.getLine()))
-//			{
-//				if (wall.getType() == WallTypes.RAMP)
-//				{
-//					onRamp = true;
-//					if (xVel > 0)
-//					{
-//						xVel = CLIMBSPEED;
-//						yVel = -CLIMBSPEED;
-//						
-//					}
-//				}
-//				else if (wall.getType() == WallTypes.WALL)
-//				{
-//					if (xVel > 0)
-//					{
-//						xVel = 0;
-//					}
-//				}
-//			}
-//			if (lCheck.intersectsLine(wall.getLine()))
-//			{
-//				if (wall.getType() == WallTypes.RAMP)
-//				{
-//					onRamp = true;
-//					if (xVel < 0)
-//					{
-//						xVel = -CLIMBSPEED;
-//						yVel = -CLIMBSPEED;
-//						
-//					}
-//				}
-//				else if (wall.getType() == WallTypes.WALL)
-//				{
-//					if (xVel < 0)
-//					{
-//						xVel = 0;
-//					}
-//				}
-//			}
-//		}
+		for (int i = 0; i < level.getObjects().size(); i++)
+		{
+			GameObject obj = level.getObjects().get(i);
+		
+			if (obj.getClass() == Wall.class)
+			{
+				Wall wall = (Wall)obj;
+				if (floorCheck.intersectsLine(wall.getLine()))
+				{
+					if (wall.getType() == WallTypes.FLOOR)
+					{
+						onGround = true;
+						canJump = true;
+					}
+					else if (wall.getType() == WallTypes.RAMP)
+					{
+						canJump = true;
+					}
+				}
+				if (rCheck.intersectsLine(wall.getLine()))
+				{
+					if (wall.getType() == WallTypes.RAMP)
+					{
+						onRamp = true;
+						if (xVel > 0)
+						{
+							xVel = CLIMBSPEED;
+							yVel = -CLIMBSPEED;
+							
+						}
+					}
+					else if (wall.getType() == WallTypes.WALL)
+					{
+						if (xVel > 0)
+						{
+							xVel = 0;
+						}
+					}
+				}
+				if (lCheck.intersectsLine(wall.getLine()))
+				{
+					if (wall.getType() == WallTypes.RAMP)
+					{
+						onRamp = true;
+						if (xVel < 0)
+						{
+							xVel = -CLIMBSPEED;
+							yVel = -CLIMBSPEED;
+							
+						}
+					}
+					else if (wall.getType() == WallTypes.WALL)
+					{
+						if (xVel < 0)
+						{
+							xVel = 0;
+						}
+					}
+				}
+			}
+		}
 		if (onGround && !onRamp)
 		{
 			yVel = 0;
