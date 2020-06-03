@@ -6,6 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/DELL/Desktop/workspace/Game-Framework/bulid/framework.jar"/>
+	<classpathentry kind="lib" path="/Game-Framework"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
